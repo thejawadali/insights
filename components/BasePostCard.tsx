@@ -33,7 +33,7 @@ function BasePost() {
               className="w-8 h-8  cursor-pointer object-cover"
             />
             {/* user name */}
-            <p className="text-gray-700 text-sm">User Name</p>
+            <p className="text-gray-700 text-sm hover:underline cursor-pointer">User Name</p>
           </div>
           {/* time stamp */}
           <p className="text-gray-500 text-xs">3 Days ago</p>
