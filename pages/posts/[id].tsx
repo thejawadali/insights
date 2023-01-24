@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 function SinglePost() {
   const router = useRouter();
   const { id } = router.query;
+  console.log(id, 'id')
   const imgURL =
     "https://www.freecodecamp.org/news/content/images/size/w2000/2023/01/cover-template--10-.png";
 

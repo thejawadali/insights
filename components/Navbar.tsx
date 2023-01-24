@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 function Navbar({ children }: any) {
@@ -23,9 +24,11 @@ function Navbar({ children }: any) {
             className="outline-none mx-1 text-md bg-transparent w-80 text-sm text-white"
           />
         </form>
-        <h1 className="text-xl font-bold cursor-pointer text-white mr-8">
-          NextJS Blogs
-        </h1>
+        <Link href="/">
+          <h1 className="text-xl font-bold cursor-pointer text-white mr-8">
+            NextJS Blogs
+          </h1>
+        </Link>
       </nav>
       <div className="mt-14">{children}</div>
     </div>
