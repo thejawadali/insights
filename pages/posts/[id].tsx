@@ -1,29 +1,55 @@
 import Head from "next/head";
 import React from "react";
 import dayjs from "dayjs";
-import { getPostDetails } from "../../services/post";
-import { RichText } from '@graphcms/rich-text-react-renderer';
+import { getPostDetails, getPostsSlugs } from "../../services/post";
+import { RichText } from "@graphcms/rich-text-react-renderer";
 
 const renderers = {
-  a: ({ children }: any) => <a className="my-1 text-blue-600 hover:underline cursor-pointer">{children}</a>,
-  h1: ({ children }: any) => <h1 className="mb-4 text-2xl text-gray-900 font-semibold">{children}</h1>,
-  h2: ({ children }: any) => <h1 className="mb-4 text-2xl text-gray-900 font-semibold">{children}</h1>,
+  a: ({ children }: any) => (
+    <a className="my-1 text-blue-600 hover:underline cursor-pointer">
+      {children}
+    </a>
+  ),
+  h1: ({ children }: any) => (
+    <h1 className="mb-4 text-2xl text-gray-900 font-semibold">{children}</h1>
+  ),
+  h2: ({ children }: any) => (
+    <h1 className="mb-4 text-2xl text-gray-900 font-semibold">{children}</h1>
+  ),
   h3: ({ children }: any) => <h3 className="text-xl">{children}</h3>,
   h4: ({ children }: any) => <h3 className="text-xl">{children}</h3>,
   h5: ({ children }: any) => <h3 className="text-lg">{children}</h3>,
   h6: ({ children }: any) => <h3 className="text-lg">{children}</h3>,
-  p: ({ children }:any) => <p className="my-4 leading-7 text-md text-gray-700">{children}</p>,
-  ul: ({ children }: any)=><ul className="list-disc list-inside my-4 text-lg text-gray-700">{children}</ul>,
-  ol: ({ children }: any)=><ol className="list-decimal list-inside my-4 text-lg text-gray-700">{children}</ol>,
-  li: ({ children }: any)=><li className="my-2 text-lg text-gray-700">{children}</li>,
-  code: ({ children }: any)=><code className="bg-gray-100 rounded-md p-1 text-sm text-gray-700">{children}</code>,
-  code_block: ({ children }: any) => <pre className="bg-gray-100 overflow-y-scroll rounded-mdp-2 text-smtext-lg text-gray-700">{children}</pre>,
-  img: ({src}: any) => <img src={src} alt="img" className="mx-auto my-3" />,
-}
+  p: ({ children }: any) => (
+    <p className="my-4 leading-7 text-md text-gray-700">{children}</p>
+  ),
+  ul: ({ children }: any) => (
+    <ul className="list-disc list-inside my-4 text-lg text-gray-700">
+      {children}
+    </ul>
+  ),
+  ol: ({ children }: any) => (
+    <ol className="list-decimal list-inside my-4 text-lg text-gray-700">
+      {children}
+    </ol>
+  ),
+  li: ({ children }: any) => (
+    <li className="my-2 text-lg text-gray-700">{children}</li>
+  ),
+  code: ({ children }: any) => (
+    <code className="bg-gray-100 rounded-md p-1 text-sm text-gray-700">
+      {children}
+    </code>
+  ),
+  code_block: ({ children }: any) => (
+    <pre className="bg-gray-100 overflow-y-scroll rounded-mdp-2 text-smtext-lg text-gray-700">
+      {children}
+    </pre>
+  ),
+  img: ({ src }: any) => <img src={src} alt="img" className="mx-auto my-3" />,
+};
 
 function SinglePost({ post }: any) {
-  console.log(post);
-
   return (
     <>
       <Head>
@@ -68,16 +94,18 @@ export async function getStaticProps({ params }: any) {
   const data = await getPostDetails(params.id);
   return {
     props: {
-      post: data
+      post: data,
     },
   };
 }
 
-
-
 export async function getStaticPaths() {
+  const posts = await getPostsSlugs();
+  const paths = posts.map((post: any) => ({
+    params: { id: post.slug.toString() },
+  }));
   return {
-    paths: [], //indicates that no page needs be created at build time
-    fallback: "blocking", //indicates the type of fallback
+    paths,
+    fallback: "blocking",
   };
 }

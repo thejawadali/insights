@@ -31,6 +31,21 @@ export const getPosts = async () => {
 
   return result
 }
+export const getPostsSlugs = async () => {
+  const query = gql`
+  query getPostsSlugs {
+    posts {
+      id
+      slug
+      title
+    }
+  }
+  `
+
+  const {posts} = await request(apiEndpoint, query)
+
+  return posts
+}
 
 export const getPostDetails = async (slug: any) => {
   const query = gql`
