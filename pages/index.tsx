@@ -4,7 +4,6 @@ import BasePost from "../components/BasePostCard";
 import { getPosts } from "../services/post";
 
 const Home: NextPage = ({ posts }: any) => {
-  console.log(posts);
   return (
     <div>
       <Head>

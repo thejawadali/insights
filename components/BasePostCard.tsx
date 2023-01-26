@@ -1,19 +1,15 @@
 import React from "react";
 import { useRouter } from 'next/router'
+import { timeDifference } from "../logic/utils";
 
 function BasePost({post}: any) {
   const router = useRouter()
-  const imgURL =
-    "https://www.freecodecamp.org/news/content/images/size/w2000/2023/01/cover-template--10-.png";
-
-  const profileURL =
-    "https://www.freecodecamp.org/news/content/images/size/w30/2022/06/1654890413623.jpg";
 
   return (
-    <article onClick={() => router.push("/posts/asf")} className="flex flex-col md:flex-row my-7 max-w-[48rem]">
+    <article onClick={() => router.push(`/posts/${post.slug}`)} className="flex flex-col md:flex-row my-7 w-[48rem]">
       {/* Featured image */}
       <img
-        src={imgURL}
+        src={post.featuredImage.url}
         alt="img"
         className="cursor-pointer w-full md:w-72 md:h-full object-cover h-52 sm:h-80 rounded-sm"
         />
@@ -30,7 +26,7 @@ function BasePost({post}: any) {
           <div className="flex items-center gap-x-3">
             {/* user profile pic */}
             <img
-              src={profileURL}
+              src={post.author.photo.url}
               alt="profile photo"
               className="w-8 h-8  cursor-pointer object-cover"
             />
@@ -38,7 +34,7 @@ function BasePost({post}: any) {
             <p className="text-gray-700 text-sm hover:underline cursor-pointer">{post.author.name}</p>
           </div>
           {/* time stamp */}
-          <p className="text-gray-500 text-xs">{post.createdAt}</p>
+          <p className="text-gray-500 text-xs">{timeDifference(post.createdAt)}</p>
         </footer>
       </div>
     </article>
