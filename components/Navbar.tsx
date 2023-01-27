@@ -1,28 +1,50 @@
 import Link from "next/link";
 import { Combobox, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
-
-const people = [
-  { id: 1, name: "Wade Cooper" },
-  { id: 2, name: "Arlene Mccoy" },
-  { id: 3, name: "Devon Webb" },
-  { id: 4, name: "Tom Cook" },
-  { id: 5, name: "Tanya Fox" },
-  { id: 6, name: "Hellen Schmidt" },
-  { id: 16, name: "Hellen Schmidt" },
-  { id: 62, name: "Hellen Schmidt" },
-  { id: 61, name: "Hellen Schmidt" },
-  { id: 64, name: "Hellen Schmidt" },
-  { id: 65, name: "Hellen Schmidt" },
-];
+import { Fragment, useEffect, useState } from "react";
+import { searchPost } from "../services/post";
+import { useRouter } from "next/router";
 
 function Navbar({ children }: any) {
   const [query, setQuery] = useState("");
-  
+  const [posts, setPosts] = useState([]);
+  const router = useRouter();
+
+  const debounce = (fn: any, delay: any) => {
+    let timeoutId: any;
+
+    return (...args: any) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        fn(...args);
+      }, delay);
+    };
+  };
+
+  async function searchPostBySlug(slug: string) {
+    setQuery(slug);
+    if (!slug) {
+      setPosts([]);
+      return;
+    }
+    const fetchedPosts = await searchPost(slug);
+    setPosts(fetchedPosts);
+    console.log(posts);
+  }
+
+  const onInputChange = debounce(searchPostBySlug, 1000);
+
   return (
     <div>
       <nav className="bg-gray-800 fixed top-0 z-30 right-0 left-0 h-12 flex md:justify-center items-center px-5">
-        <Combobox onChange={(e) => console.log("selc", e)}>
+        <Combobox
+          onChange={(slug) => {
+            router.push(`/posts/${slug}`);
+            setQuery("");
+            setPosts([]);
+          }}
+        >
           <div className="left-5 hidden md:block pr-2 pl-3 py-1 absolute bg-gray-700">
             <div className="flex justify-between items-center">
               <svg
@@ -38,7 +60,8 @@ function Navbar({ children }: any) {
               <Combobox.Input
                 className="outline-none mx-1 text-md bg-transparent w-80 text-sm text-white"
                 placeholder="Search"
-                onChange={(event) => setQuery(event.target.value)}
+                value={query}
+                onChange={(event) => onInputChange(event.target.value)}
               />
             </div>
             <Transition
@@ -46,22 +69,27 @@ function Navbar({ children }: any) {
               leave="transition ease-in duration-100"
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
-              afterLeave={() => setQuery("")}
+              afterLeave={() => setPosts([])}
             >
-              <Combobox.Options className="absolute mt-1 left-0 max-h-60 w-full overflow-auto bg-gray-700 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                {/* {filteredPeople.length === 0 && query !== "" ? ( */}
-                {query !== "" ? (
-                  <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+              <Combobox.Options className="absolute mt-1 left-0 w-full overflow-auto bg-gray-700 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                {query !== "" && posts.length <= 0 ? (
+                  <div className="relative cursor-default select-none py-2 pl-2 pr-4 text-white">
                     Nothing found.
                   </div>
                 ) : (
-                  people.map((person) => (
+                  posts.map((post: any) => (
                     <Combobox.Option
-                      key={person.id}
-                      className="relative border-t border-gray-200 cursor-default select-none py-2 pl-2 pr-4 hover:text-gray-700 text-white hover:bg-gray-200"
-                      value={person}
+                      key={post.id}
+                      className={({ active }) =>
+                        `relative border-t border-gray-200 cursor-pointer select-none py-2 pl-2 pr-4 ${
+                          active
+                            ? "bg-gray-200 text-gray-700"
+                            : " hover:text-gray-700 text-white hover:bg-gray-200"
+                        }`
+                      }
+                      value={post.slug}
                     >
-                      <span className="font-normal">{person.name}</span>
+                      <span className="font-normal">{post.title}</span>
                     </Combobox.Option>
                   ))
                 )}

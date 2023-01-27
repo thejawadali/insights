@@ -6,7 +6,7 @@ function BasePost({post}: any) {
   const router = useRouter()
 
   return (
-    <article onClick={() => router.push(`/posts/${post.slug}`)} className="flex flex-col md:flex-row my-7 w-[48rem]">
+    <article onClick={() => router.push(`/posts/${post.slug}`)} className="flex flex-col md:flex-row my-7 md:w-[48rem]">
       {/* Featured image */}
       <img
         src={post.featuredImage.url}
@@ -15,7 +15,7 @@ function BasePost({post}: any) {
         />
       <div className="flex flex-col mt-4 md:mt-0 md:ml-5  flex-1">
         {/* category */}
-        <a className="text-gray-600 inline-block hover:underline cursor-pointer">
+        <a className="text-gray-600 inline-block">
           #{post.categories[0].name}
         </a>
         {/* title */}
@@ -31,7 +31,7 @@ function BasePost({post}: any) {
               className="w-8 h-8  cursor-pointer object-cover"
             />
             {/* user name */}
-            <p className="text-gray-700 text-sm hover:underline cursor-pointer">{post.author.name}</p>
+            <p className="text-gray-700 text-sm">{post.author.name}</p>
           </div>
           {/* time stamp */}
           <p className="text-gray-500 text-xs">{timeDifference(post.createdAt)}</p>

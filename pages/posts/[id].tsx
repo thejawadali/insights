@@ -60,7 +60,7 @@ function SinglePost({ post }: any) {
         {/* date and tag */}
         <p className="text-sm text-gray-600 font-semibold">
           {dayjs(post.createdAt).format("MMMM D, YYYY")} / {/* category */}
-          <a className="hover:underline inline-block cursor-pointer text-blue-800">
+          <a>
             #{post.categories[0].name}
           </a>
         </p>
@@ -71,7 +71,7 @@ function SinglePost({ post }: any) {
         {/* author */}
         <div className="flex items-center">
           <img src={post.author.photo.url} className="w-14 h-14" />
-          <p className="mx-3 cursor-pointer text-lg font-semibold">
+          <p className="mx-3 text-lg font-semibold">
             {post.author.name}
           </p>
         </div>

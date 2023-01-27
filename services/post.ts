@@ -80,7 +80,7 @@ export const getPostDetails = async (slug: any) => {
 export const searchPost = async (slug: any) => {
   const query = gql`
     query searchPost($slug : String!) {
-      posts(where: {slug: $slug}) {
+      posts(where: {_search: $slug}) {
         title
         slug
         id
@@ -88,8 +88,8 @@ export const searchPost = async (slug: any) => {
     }
   `
 
-  const { post } = await request(apiEndpoint, query, { slug })
-  return post
+  const { posts } = await request(apiEndpoint, query, { slug })
+  return posts
 }
 
 
